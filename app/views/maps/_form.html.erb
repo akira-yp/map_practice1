@@ -1,0 +1,90 @@
+
+<%= form_with(model: map, local: true) do |form| %>
+  <% if map.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(map.errors.count, "error") %> prohibited this map from being saved:</h2>
+
+      <ul>
+      <% map.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address %>
+    <%= form.text_field :address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :comment %>
+    <%= form.text_area :comment %>
+  </div>
+
+  <div class="field">
+    <%= form.text_field :lonlat %>
+  </div>
+
+  <div id="mapid" style="height: 500px; width: 500px;"></div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
+
+<script>
+mymap = L.map('mapid').setView([35.678362, 139.715387], 16);
+var gm = L.gridLayer.googleMutant({
+    type: 'roadmap'
+  });
+gm.addTo(mymap)
+
+var crossIcon = L.icon({ //センタークロス表示用
+  iconUrl: '/target.png',
+  iconSize: [32, 32],
+  iconAnchor: [16, 16]
+});
+var crossMarker = L.marker( mymap.getCenter(),{icon:crossIcon,zIndexOffset:1000,interactive:false} ).addTo(mymap);
+
+mymap.on('move', function(e) {
+    crossMarker.setLatLng(mymap.getCenter()); //センタークロス表示用
+
+    //マップムーブイベントで値を出力
+    outputPos(mymap);
+
+  });
+
+// Control OSM Geocoder
+// var option = {
+// position: 'topright', // topright, topleft, bottomright, bottomleft
+// text: '検索',
+// placeholder: '検索条件を入力してください。'
+// }
+// var osmGeocoder = new L.Control.OSMGeocoder(option);
+// gm.addControl(osmGeocoder);
+  // // Plugin leaflet-fusesearch の設定
+  // var searchCtrl = L.control.fuseSearch()
+  // searchCtrl.addTo(map);
+  //
+  // // Layer control, setting
+  // var layerCtrl = L.control.layers();
+  // var featureLayer = L.featureGroup();
+  // layerCtrl.addOverlay(featureLayer);
+  // featureLayer.addTo(map);
+
+
+//現在の緯度・経度・倍率を取得して指定の要素に情報を出力する関数
+  function outputPos(mymap){
+      var pos = mymap.getCenter();
+      var zoom = mymap.getZoom();
+      document.getElementById('map_lonlat').value = `${pos.lat},${pos.lng}`;
+  }
+
+</script>

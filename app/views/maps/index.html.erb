@@ -1,0 +1,72 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Maps</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Comment</th>
+      <th>Lonlat</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @maps.each do |map| %>
+      <tr>
+        <td><%= map.name %></td>
+        <td><%= map.address %></td>
+        <td><%= map.comment %></td>
+        <td><%= map.lonlat %></td>
+        <td><%= link_to 'Show', map %></td>
+        <td><%= link_to 'Edit', edit_map_path(map) %></td>
+        <td><%= link_to 'Destroy', map, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<br>
+
+<div id="mapid"></div>
+<script scr="maps.js">
+  mymap = L.map('mapid').setView([35.678362, 139.715387], 16);
+  var gm = L.gridLayer.googleMutant({
+      type: 'roadmap'
+    });
+  gm.addTo(mymap);
+
+  //イベント作成ページへのリンク（ポップアップ）
+  var postEvent = '<%= link_to "ここにイベントを作成", new_map_path() %>';
+// クリックイベント
+  mymap.options.singleClickTimeout = 250;
+  mymap.on('singleclick', function(ev){
+    L.popup().setLatLng(ev.latlang).setContnt(postEvent).openOn(mymap);
+  });
+
+  var markers = L.markerClusterGroup();
+
+  <% @maps.each_with_index do |map, i| %>
+    var myIcon = L.icon({iconUrl: "/marker.png",iconSize:[30,30], iconAnchor:[15,15]});
+    var comment = '<%= link_to map.comment, map_path(map) %>'
+    var marker = L.marker("<%= map.lonlat %>".split(','), {icon: myIcon },);
+    marker.bindPopup(comment);
+    // marker.addTo(mymap);
+    markers.addLayer(marker);
+  <% end %>
+
+  mymap.addLayer(markers);
+
+  // mymap.on('click',function(e){
+  //   lat = e.latlng.lat;
+  //   lng = e.latlng.lng;
+  //   eventPoint = e
+  // });
+
+  // eventPoint.bindPopup(postEvent);
+</script>
+
+<%= link_to 'New Map', new_map_path %>
