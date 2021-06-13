@@ -13,5 +13,6 @@
 //= require rails-ujs
 //= require jquery
 //= require jquery_ujs
+//= require leaflet/dist/leaflet.js
 //= require activestorage
 //= require_tree .

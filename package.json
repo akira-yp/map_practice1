@@ -1,5 +1,7 @@
 {
   "name": "map_app",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "leaflet": "^1.7.1"
+  }
 }
