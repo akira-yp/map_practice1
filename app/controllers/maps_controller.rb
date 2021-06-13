@@ -8,6 +8,10 @@ class MapsController < ApplicationController
 
   # GET /maps/1 or /maps/1.json
   def show
+    respond_to do |format|
+      format.html
+      format.js { @map }
+    end
   end
 
   # GET /maps/new

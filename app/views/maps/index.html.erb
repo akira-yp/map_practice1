@@ -20,8 +20,8 @@
         <td><%= map.address %></td>
         <td><%= map.comment %></td>
         <td><%= map.lonlat %></td>
-        <td><%= link_to 'Show', map %></td>
-        <td><%= link_to 'Edit', edit_map_path(map) %></td>
+        <td><%= link_to 'Show', map,remote:true %></td>
+        <td><%= link_to 'Edit', edit_map_path(map)%></td>
         <td><%= link_to 'Destroy', map, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
@@ -32,7 +32,7 @@
 <br>
 
 <div id="mapid"></div>
-<script scr="maps.js">
+<script>
   mymap = L.map('mapid').setView([35.678362, 139.715387], 16);
   var gm = L.gridLayer.googleMutant({
       type: 'roadmap'
@@ -51,7 +51,7 @@
 
   <% @maps.each_with_index do |map, i| %>
     var myIcon = L.icon({iconUrl: "/marker.png",iconSize:[30,30], iconAnchor:[15,15]});
-    var comment = '<%= link_to map.comment, map_path(map) %>'
+    var comment = '<%= link_to map.comment, map_path(map), remote:true %>'
     var marker = L.marker("<%= map.lonlat %>".split(','), {icon: myIcon },);
     marker.bindPopup(comment);
     // marker.addTo(mymap);
@@ -70,3 +70,11 @@
 </script>
 
 <%= link_to 'New Map', new_map_path %>
+
+<!-- モーダルの周囲を薄暗くするマスク -->
+  <div id="mask" class="hidden"></div>
+<!-- モーダル
+あとからJavaScriptで<div>内のコードをshowビューのコードに置き換えます。 -->
+  <div id="modal" class="hidden">
+    <p>ここに詳細が表示される</p>
+  </div>

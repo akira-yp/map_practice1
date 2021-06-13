@@ -1,5 +1,5 @@
 
-<%= form_with(model: map, local: true) do |form| %>
+<%= form_with(model: @map, local: true) do |form| %>
   <% if map.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(map.errors.count, "error") %> prohibited this map from being saved:</h2>
@@ -28,7 +28,7 @@
   </div>
 
   <div class="field">
-    <%= form.text_field :lonlat %>
+    <%= form.hidden_field :lonlat %>
   </div>
 
   <div id="mapid" style="height: 500px; width: 500px;"></div>
@@ -84,7 +84,7 @@ mymap.on('move', function(e) {
   function outputPos(mymap){
       var pos = mymap.getCenter();
       var zoom = mymap.getZoom();
-      document.getElementById('map_lonlat').value = `${pos.lat},${pos.lng}`;
+      document.getElementById('map_lonlat').value = `${pos.lat.toFixed(6)}, ${pos.lng.toFixed(6)}`;
   }
 
 </script>
